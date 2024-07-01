@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gene Information Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gene Information Results</h1>
+        <p>Chromosome: {{ chromosome }}</p>
+        <p>Start: {{ start }}</p>
+        <p>End: {{ end }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Gene Name</th>
+                    <th>Gene ID</th>
+                    <th>HGNC ID</th>
+                    <th>Summary</th>
+                    <th>OMIM Number</th>
+                    <th>ClinVar Link</th>
+                    <th>OMIM Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for gene in genes %}
+                <tr>
+                    <td>{{ gene['external_name'] }}</td>
+                    <td><a href="https://asia.ensembl.org/Homo_sapiens/Gene/Summary?db=core;g={{ gene['gene_id'] }}" target="_blank">{{ gene['gene_id'] }}</a></td>
+                    <td>{{ gene['hgnc_id'] }}</td>
+                    <td>{{ gene['summary'] }}</td>
+                    <td>{{ gene['omim'] if gene['omim'] else 'N/A' }}</td>
+                    {% if gene['external_name'] != 'N/A' %}
+                    <td><a href="{{ gene['clinvar_link'] }}" target="_blank">ClinVar</a></td>
+                    {% if gene['omim'] %}
+                    <td><a href="{{ gene['omim_link'] }}" target="_blank">OMIM</a></td>
+                    {% else %}
+                    <td>N/A</td>
+                    {% endif %}
+                    {% else %}
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
